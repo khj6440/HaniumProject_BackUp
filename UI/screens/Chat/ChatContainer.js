@@ -10,8 +10,15 @@ export default class ChatContainer extends React.Component {
     Messages: {},
     welcomeResult: null,
     sendResult: null,
+    chatflow_id: "",
+    ins_id: "",
+    intent_id: "",
+    node_id: "",
+    param_id: "",
+    parameters: "",
+    session_id: "",
     error: null,
-    date: new Date()
+    date: new Date(),
   };
 
   async componentWillMount() {
@@ -23,14 +30,14 @@ export default class ChatContainer extends React.Component {
     } finally {
       this.setState({
         welcomeResult,
-        error
+        error,
       });
     }
   }
 
   controllNewMsg = text => {
     this.setState({
-      newMsg: text
+      newMsg: text,
     });
   };
 
@@ -44,16 +51,16 @@ export default class ChatContainer extends React.Component {
             id: ID,
             text: newMsg,
             createAt: new Date(),
-            isDanbee: false
-          }
+            isDanbee: false,
+          },
         };
         const newState = {
           ...prevState,
           newMsg: "",
           Messages: {
             ...prevState.Messages,
-            ...newMsgObj
-          }
+            ...newMsgObj,
+          },
         };
         return { ...newState };
       });
@@ -61,15 +68,47 @@ export default class ChatContainer extends React.Component {
   };
 
   sendMsg = async (sendResult, error) => {
-    const { newMsg } = this.state;
+    const {
+      newMsg,
+      intent_id,
+      param_id,
+      session_id,
+      node_id,
+      ins_id,
+      chatflow_id,
+    } = this.state;
+    let parameters;
+    console.log(intent_id, param_id);
     console.log("1");
+
     if (newMsg !== "") {
+      console.log("newMsg" + newMsg);
       try {
-        sendResult = await DanbeeApi.getAnswer(newMsg);
+        console.log("param : " + parameters);
+        sendResult = await DanbeeApi.getAnswer(
+          newMsg,
+          intent_id,
+          param_id,
+          parameters,
+          session_id,
+          node_id,
+          ins_id,
+          chatflow_id,
+        );
       } catch (error) {
         error = "Can't get Answer";
       } finally {
-        this.setState({ sendResult, error });
+        this.setState({
+          sendResult,
+          error,
+          intent_id: sendResult.data.responseSet.result.intent_id,
+          param_id: sendResult.data.responseSet.result.param_id,
+          ins_id: sendResult.data.responseSet.result.ins_id,
+          session_id: sendResult.data.responseSet.result.session_id,
+          node_id: sendResult.data.responseSet.result.node_id,
+          chatflow_id: sendResult.data.responseSet.result.chatflow_id,
+        });
+
         console.log(sendResult);
       }
       this.setState(prevState => {
@@ -77,18 +116,18 @@ export default class ChatContainer extends React.Component {
         const newMsgObj = {
           [ID]: {
             id: ID,
-            text: sendResult.data.responseSet.result.result[1].message,
+            text: sendResult.data.responseSet.result.result[0].message,
             createAt: new Date(),
-            isDanbee: true
-          }
+            isDanbee: true,
+          },
         };
         const newState = {
           ...prevState,
           newMsg: "",
           Messages: {
             ...prevState.Messages,
-            ...newMsgObj
-          }
+            ...newMsgObj,
+          },
         };
         return { ...newState };
       });
@@ -96,7 +135,13 @@ export default class ChatContainer extends React.Component {
   };
 
   render() {
-    const { newMsg, Messages, welcomeResult, sendResult, date } = this.state;
+    const {
+      newMsg,
+      Messages,
+      welcomeResult,
+      sendResult,
+      date,
+    } = this.state;
     return (
       <ChatPresenter
         welcomeResult={welcomeResult}

@@ -6,9 +6,10 @@ import * as Permissions from "expo-permissions";
 import { Ionicons } from "@expo/vector-icons";
 import MainNavigation from "./navigation/MainNavigation";
 
+
 export default class App extends React.Component {
   state = {
-    loaded: false
+    loaded: false,
   };
 
   handleError = error => console.log(error);
@@ -17,7 +18,7 @@ export default class App extends React.Component {
 
   loadAssets = async () => {
     await Font.loadAsync({
-      ...Ionicons.font
+      ...Ionicons.font,
     });
   };
 
@@ -28,6 +29,8 @@ export default class App extends React.Component {
     if (status != "granted") {
       const res = await Permissions.askAsync(Permissions.LOCATION);
     }
+  
+    
   };
 
   render() {

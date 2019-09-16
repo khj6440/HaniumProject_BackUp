@@ -91,7 +91,7 @@ const ChatPresenter = ({
         <DanbeeMsg>
           <Text>
             {welcomeResult
-              ? welcomeResult.data.responseSet.result.result[1].message
+              ? welcomeResult.data.responseSet.result.result[0].message
               : null}
           </Text>
         </DanbeeMsg>
@@ -126,6 +126,8 @@ const ChatPresenter = ({
         onPress={() => {
           addMsg();
           sendMsg();
+        
+          
         }}
       >
         <BtnText>Send</BtnText>
@@ -140,7 +142,8 @@ ChatPresenter.propType = {
   addMsg: propType.func.isRequired,
   Messages: propType.object.isRequired,
   welcomeResult: propType.string.isRequired,
-  date: propType.object.isRequired
+  date: propType.object.isRequired,
+  sendMsg: propType.func.isRequired
 };
 
 const styles = StyleSheet.create({});
