@@ -4,14 +4,14 @@ import styled from "styled-components";
 import Swiper from "react-native-swiper";
 import Layout from "../constants/Layout";
 import WeatherSlide from "../components/WeatherSlide";
-import { StyleSheet } from "react-native";
+import { StyleSheet,Platform } from "react-native";
 import DustSlide from "./DustSlide";
 
 const SWIPER_HEIGHT = Layout.height / 3.3;
 
 const SliderContainer = styled.View`
-  margin-top: 20;
-  margin-bottom: 15;
+  margin-top: 10;
+  margin-bottom: 10;
   padding-left: 10;
   padding-right: 10;
   height: ${SWIPER_HEIGHT};
@@ -26,6 +26,7 @@ const Slider = ({ Dust,Weather,CurrentPosition,refresh }) => (
       style={styles.a}
       autoplay={true}
       autoplayTimeout={3}
+      useViewOverflow={Platform.OS==="ios"}
     >
       <WeatherSlide
         refresh={refresh}
