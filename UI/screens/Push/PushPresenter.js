@@ -10,7 +10,6 @@ import { Ionicons } from "@expo/vector-icons";
 
 const Container = styled.ScrollView`
   flex: 1;
-  background-color: ${BG_COLOR};
 `;
 const Btn = styled.TouchableOpacity`
   justify-content: center;
@@ -75,61 +74,62 @@ const StateValue = styled.Text`
 `;
 
 //navigation.navigate("MqttScreen")  언제쓸지모름
-const PushPresenter = ({navigation, Subconsole, gas, temp, dust, refresh}) => (
+const PushPresenter = ({navigation, Subconsole, currentGas,currentTemp, currentDust, }) => (
   <Container>
     <Column style={styles.shadow}>
       <LinearGradient colors={["#49ab87", "#36c994"]} style={styles.btn}>
-        <Btn onPress={() => {
-          Subconsole();
-          refresh();
-          }}>
+        <Btn onPress={() =>
+            navigation.navigate({
+              routeName: "HealthScreen"
+            })
+          } 
+        >
+          
           <BtnText>콘솔 찍기</BtnText>
           
         </Btn>
       </LinearGradient>
     </Column>
-    <Text> gdgd</Text>
     <TitleContainer>
-      <TitleText>우리집 한눈에</TitleText>
     </TitleContainer>
     <Column>
       <StateContainer>
-        <Ionicons
+        {/* <Ionicons
           name={Platform.OS == "ios" ? "ios-thermometer" : "md-thermometer"}
           size={30}
           color="red"
-        />
+        /> */}
         <StateView>
-          <StateTitle>가스</StateTitle>
-          <StateValue>{gas}</StateValue>
+          <StateTitle>키</StateTitle>
+        <StateValue>{currentGas}</StateValue>
         </StateView>
       </StateContainer>
       <StateContainer>
-        <Ionicons
+        {/* <Ionicons
           name={Platform.OS == "ios" ? "ios-water" : "md-water"}
           size={30}
           color="blue"
-        />
+        /> */}
 
         <StateView>
-          <StateTitle>온도</StateTitle>
-          <StateValue>{temp}</StateValue>
+          <StateTitle>몸무게</StateTitle>
+          <StateValue>{currentTemp}</StateValue>
         </StateView>
       </StateContainer>
       <StateContainer>
-        <Ionicons
+        {/* <Ionicons
           name={Platform.OS == "ios" ? "ios-cloud" : "md-cloud"}
           size={30}
           color="grey"
-        />
+        /> */}
 
         <StateView>
-          <StateTitle>미세먼지</StateTitle>
-          <StateValue>{dust}</StateValue>
+          <StateTitle>체온</StateTitle>
+          <StateValue>{currentDust}</StateValue>
         </StateView>
       </StateContainer>
     </Column>
   </Container>
   
 );
-export default PushPresenter;
+export default withNavigation(PushPresenter);

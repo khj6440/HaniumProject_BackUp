@@ -47,9 +47,10 @@ const SearchPresenter = ({
   handleSearchUpdate,
   onSubmitEditing,
   results,
-  changeBreakfast,
-  BreakfastNut,
-  newNut
+  changePartValue,
+  changeValue,
+  partNut,
+  addFood
 }) => (
   <MainContainer>
     <Container>
@@ -76,9 +77,11 @@ const SearchPresenter = ({
           <FoodItem
             key={index}
             result={result}
-            changeBreakfast={changeBreakfast}
-            BreakfastNut={BreakfastNut}
-            newNut={newNut}
+            changePartValue={changePartValue}
+            changeValue={changeValue}
+            partNut={partNut}
+            addFood={addFood}
+            isMine={false}
           />
         ))
       ) : (

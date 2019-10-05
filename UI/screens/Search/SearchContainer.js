@@ -12,15 +12,16 @@ export default class FoodContainer extends React.Component {
     const {
       navigation: {
         state: {
-          params: { BreakfastNut, changeBreakfast,newNut },
+          params: { changePartValue , partNut,changeValue ,addFood},
         },
       },
     } = props;
 
     this.state = {
-      changeBreakfast,
-      BreakfastNut,
-      newNut,
+      changePartValue,
+      changeValue,
+      partNut,
+      addFood,
 
       loading: false,
       searchTerm: "",
@@ -28,12 +29,7 @@ export default class FoodContainer extends React.Component {
       results: [],
     };
   }
-  // state = {
-  //   loading: false,
-  //   searchTerm: "",
-  //   error: null,
-  //   results: [],
-  // };
+
 
   handleSearchUpdate = text => {
     this.setState({
@@ -79,10 +75,12 @@ export default class FoodContainer extends React.Component {
       loading,
       searchTerm,
       results,
-      changeBreakfast,
-      BreakfastNut,
-      newNut
+      changePartValue,
+      partNut,
+      changeValue,
+      addFood 
     } = this.state;
+
     return (
       <SearchPresenter
         handleSearchUpdate={this.handleSearchUpdate}
@@ -90,9 +88,10 @@ export default class FoodContainer extends React.Component {
         searchTerm={searchTerm}
         results={results}
         loading={loading}
-        BreakfastNut={BreakfastNut}
-        changeBreakfast={changeBreakfast}
-        newNut={newNut}
+        changePartValue={changePartValue}
+        changeValue={changeValue}
+        partNut={partNut}
+        addFood={addFood}
         />
     );
   }

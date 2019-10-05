@@ -1,49 +1,101 @@
 import React from "react";
 import BreakfastPresenter from "./BreakfastPresenter";
+import uuidv1 from "uuid/v1";
+import { AsyncStorage } from "react-native";
 
 export default class BreakfastContainer extends React.Component {
   constructor(props) {
     super(props);
+    this.loadData();
     const {
       navigation: {
         state: {
-          params: { nutrient, changeValue, BreakfastNut },
+          params: { changeValue, BreakfastNut,myNut },
         },
       },
     } = props;
 
     this.state = {
-      nutrient,
       changeValue,
       BreakfastNut,
-      newNut: { kcal: 0, carbs: 0, protein: 0, fat: 0 },
-      // BreakfastNut: { kcal: 0, carbs: 0, protein: 0, fat: 0 },
+      FoodList: {},
+      myNut
     };
   }
 
-  changeBreakfast = (BreakfastNut, newNut) => {
-    const Sum = {
-      kcal: parseInt(BreakfastNut.kcal) + parseInt(newNut.kcal),
-      carbs: parseInt(BreakfastNut.carbs) + parseInt(newNut.carbs),
-      protein: parseInt(BreakfastNut.protein) + parseInt(newNut.protein),
-      fat: parseInt(BreakfastNut.fat) + parseInt(newNut.fat),
-    };
+  loadData = async () => {
+    const Data = await AsyncStorage.getItem("Breakfast");
+    const Data2 = await AsyncStorage.getItem("BreakfastNut");
+
+    const JsonData = JSON.parse(Data);
+    const JsonData2 = JSON.parse(Data2);
+
+    console.log(JsonData);
+    if (JsonData && JsonData2) {
+      this.setState({ FoodList: JsonData, BreakfastNut: JsonData2 });
+    } else {
+      return;
+    }
+  };
+
+  deleteBreakfast = id =>{
+    this.setState(prevState=>{
+      const FoodList =prevState.FoodList;
+      delete FoodList[id];
+      const newState={
+        ...prevState,
+        ...FoodList
+      };
+      AsyncStorage.multiSet([
+        ["Breakfast", JSON.stringify(newState.FoodList)],
+        ["BreakfastNut", JSON.stringify(this.state.BreakfastNut)],
+      ]);
+      return {...newState}
+    })
+  } 
+  addBreakfast = newFood => {
+    if (newFood !== null) {
+      this.setState(prevState => {
+        const ID = uuidv1();
+        const newFoodObj = {
+          [ID]: {
+            id: ID,
+            obj: newFood,
+          },
+        };
+        const newState = {
+          ...prevState,
+          FoodList: {
+            ...prevState.FoodList,
+            ...newFoodObj,
+          },
+        };
+        AsyncStorage.multiSet([
+          ["Breakfast", JSON.stringify(newState.FoodList)],
+          ["BreakfastNut", JSON.stringify(this.state.BreakfastNut)],
+        ]);
+        return { ...newState };
+      });
+    }
+  };
+
+  changePartValue = BreakfastNut => {
     this.setState({
-      // BreakfastNut:this.funca(BreakfastNut)
-      BreakfastNut: Sum,
+      BreakfastNut,
     });
-    this.state.changeValue(BreakfastNut);
   };
 
   render() {
-    const { BreakfastNut, changeValue, nutrient, newNut } = this.state;
+    const { BreakfastNut, changeValue, FoodList ,myNut } = this.state;
     return (
       <BreakfastPresenter
-        nutrient={nutrient}
+        myNut={myNut}
+        FoodList={FoodList}
         BreakfastNut={BreakfastNut}
         changeValue={changeValue}
-        changeBreakfast={this.changeBreakfast}
-        newNut={newNut}
+        changePartValue={this.changePartValue}
+        addBreakfast={this.addBreakfast}
+        deleteBreakfast={this.deleteBreakfast}
       />
     );
   }

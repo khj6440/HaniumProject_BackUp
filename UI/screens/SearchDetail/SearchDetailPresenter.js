@@ -65,9 +65,11 @@ const BtnContainer = styled.View`
 const SearchDetailPresenter = ({
   navigation,
   result,
-  BreakfastNut,
-  changeBreakfast,
-  newNut,
+  changePartValue,
+  partNut,
+  changeValue,
+  addFood,
+  isMine,
 }) => (
   <Container>
     <Header>
@@ -115,21 +117,42 @@ const SearchDetailPresenter = ({
         <NutValue>{result.NUTR_CONT9[0]}(g)</NutValue>
       </NutBox>
       <BtnContainer>
-        <AwesomeButton
-          width={160}
-          height={50}
-          onPress={() => {
-            navigation.goBack();
-            changeBreakfast(BreakfastNut, {
-              kcal: result.NUTR_CONT1[0],
-              carbs: result.NUTR_CONT2[0],
-              protein: result.NUTR_CONT3[0],
-              fat: result.NUTR_CONT4[0],
-            });
-          }}
-        >
-          <Text>+ 추가하기</Text>
-        </AwesomeButton>
+        {!isMine ? (
+          <AwesomeButton
+            width={160}
+            height={50}
+            onPress={() => {
+              partNut.kcal += parseInt(result.NUTR_CONT1[0]);
+              partNut.carbs += parseInt(result.NUTR_CONT2[0]);
+              partNut.protein += parseInt(result.NUTR_CONT3[0]);
+              partNut.fat += parseInt(result.NUTR_CONT4[0]);
+
+              console.log(partNut.kcal, partNut.carbs);
+
+              navigation.navigate({ routeName: "SearchScreen" });
+              changePartValue(partNut);
+              changeValue(
+                parseInt(result.NUTR_CONT1[0]),
+                parseInt(result.NUTR_CONT2[0]),
+                parseInt(result.NUTR_CONT3[0]),
+                parseInt(result.NUTR_CONT4[0]),
+              );
+              addFood(result);
+            }}
+          >
+            <Text>+ 추가하기</Text>
+          </AwesomeButton>
+        ) : (
+          <AwesomeButton
+            width={160}
+            height={50}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          >
+            <Text>+ 뒤로가기</Text>
+          </AwesomeButton>
+        )}
       </BtnContainer>
     </Body>
     <Footer>
