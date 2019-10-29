@@ -1,12 +1,12 @@
 import React from "react";
-import { Text, StyleSheet } from "react-native";
+import { Text, StyleSheet ,TouchableOpacity } from "react-native";
 import styled from "styled-components";
 import propType from "prop-types";
 import Layout from "../../constants/Layout";
 import { LinearGradient } from "expo-linear-gradient";
 import { Linking } from "expo";
 
-const Container = styled.ScrollView`
+const Container = styled.View`
   position: relative;
   flex: 1;
 `;
@@ -86,15 +86,17 @@ const BtnText = styled.Text`
   font-weight: 600;
 `;
 
+
+
 const NewsPresenter = ({ title, poster, author, description, url,navigation }) => (
   <Container>
-    <BgImage source={{ uri: poster }} />
+    <BgImage source={{ uri: poster }}  />
     <Header>
       <Title>{title}</Title>
-      <MainImage source={{ uri: poster }} />
+      <MainImage source={{ uri: poster }}  />
     </Header>
     <Body>
-      <BodyContent>요약문 : {description}</BodyContent>
+      <BodyContent>요약문 : {description.replace("<b>","").replace("</b>","")}</BodyContent>
     </Body>
     <Author>
       <AuthorName>By {author}</AuthorName>

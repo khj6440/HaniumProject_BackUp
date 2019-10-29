@@ -57,8 +57,8 @@ export default class extends React.Component {
               tintColor:focused == 2 ?  "#2dcf93":"white",
             },
             {
-              title: "Chat",
-              icon: require("../assets/chat.png"),
+              title: "Exercise",
+              icon: require("../assets/walk.png"),
               tintColor: focused == 3 ? "#2dcf93":"white",
             }
           ]}

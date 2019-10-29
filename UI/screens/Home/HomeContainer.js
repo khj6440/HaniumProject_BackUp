@@ -3,7 +3,8 @@ import HomePresenter from "./HomePresenter";
 import Loader from "../../components/Loader";
 import axios from "axios";
 import { BaseDate, Hours } from "../../constants/Time";
-
+import client from "../../mqtt"
+import {AsyncStorage} from "react-native";
 
 const KAKAO_KEY = "d8d67d3d69ab7f44bc09d1ecf85da1f8";
 const DATA_KEY =
@@ -11,28 +12,60 @@ const DATA_KEY =
 const GOOGLE_KEY = "097d07bd00774c47988512cbecace037";
 
 export default class HomeContainer extends React.Component {
-  state = {
-    weatherLoaded: false,
-    Dust: null,
-    CurrentPosition: null,
-    Weather: null,
-    News: null,
-    Hospitals:null,
-    Pharmacys:null
+  constructor(props){
+    super(props);
+    client.connect({
+        timeout:7,
+        onSuccess:this.onConnect,
+        useSSL: false,
+        onFailure:this.onFailure,
+      });    
+      client.onConnectionLost = this.onConnectionLost;
+
+    this.state = {
+      client,
+      weatherLoaded: false,
+      Dust: null,
+      CurrentPosition: null,
+      Weather: null,
+      News: null,
+      FoodTip: null,
+      HealthTip: null,
+    };
+  }
+  onConnectionLost = responseObject => {
+    if (responseObject.errorCode !== 0) {
+       console.log("connection lost");
+       }
   };
+  onConnect = () => {
+    const { client } = this.state;
+    AsyncStorage.setItem("Connected","1");
+    console.log("success");
+  };   
+  
+  onFailure = async(error) => {
+    await AsyncStorage.setItem("Connected","0");
+    console.log("fail");
+    console.log(error);
+  };
+  
+  
 
   refresh = () => {
     this.componentDidMount();
   };
 
+
   componentDidMount() {
+    const {client} = this.state;
     navigator.geolocation.getCurrentPosition(
       async position => {
         const local = await this.getLocalname(
           position.coords.latitude,
           position.coords.longitude,
         );
-        console.log(position.coords.latitude,position.coords.longitude)
+        console.log(position.coords.latitude, position.coords.longitude);
         CurrentPosition = local.documents[1].address_name;
         console.log(CurrentPosition);
 
@@ -49,46 +82,64 @@ export default class HomeContainer extends React.Component {
         console.log(Dust);
 
         const News = await this.getNews();
+
+        console.log(News);
         
-        const Hospitals = await this.getHospital(
-          position.coords.latitude,
-          position.coords.longitude
-        );
+        const HealthTip = await this.getHealthTip();
 
-        console.log(Hospitals)
+        console.log(HealthTip);
 
-        const Pharmacys = await this.getPharmacy(
-          position.coords.latitude,
-          position.coords.longitude
-        )
-        console.log(Pharmacys)
+        const FoodTip = await this.getFoodTip();
 
+        console.log(FoodTip);
+
+        const connected= await AsyncStorage.getItem("Connected")
+
+        if(connected===1){
+        client.publish("dust", Number(Dust.list[0].pm10Value).toString())
+        client.publish("semidust", Number(Dust.list[0].pm25Value).toString())
+        }
+
+        // const test = await axios.get(`http://sickchatbot.shop/position/positionSave?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}`)
+        
         this.setState({
           Weather,
           Dust,
           CurrentPosition,
           weatherLoaded: true,
           News,
-          Hospitals,
-          Pharmacys
+          HealthTip,
+          FoodTip,
         });
       },
       error => console.log(error),
     );
   }
 
-  getPharmacy =async(lat,long)=>{
-    const {data:Pharmacys} = await axios.get(`http://apis.data.go.kr/B551182/pharmacyInfoService/getParmacyBasisList?serviceKey=${DATA_KEY}&numOfRows=10&xPos=${long}&yPos=${lat}&radius=3000`)
+  getFoodTip = async () => {
+    const { data: FoodTip } = await axios.get(
+      `https://dapi.kakao.com/v2/search/blog?query=http://blog.daum.net/nhicblog 음식`,
+      {
+        headers: {
+          Authorization: `KakaoAK ${KAKAO_KEY}`,
+        },
+      },
+    );
+    return FoodTip.documents;
+  };
 
-    return Pharmacys.response.body.items.item;
-  }
-  getHospital =async(lat,long)=>{
-    const {data:Hospitals} =await axios.get(`http://apis.data.go.kr/B551182/hospInfoService/getHospBasisList?serviceKey=${DATA_KEY}&numOfRows=10&xPos=${long}&yPos=${lat}&radius=3000`);
-
-    return Hospitals.response.body.items.item;
-  }
-
-  
+  getHealthTip = async () => {
+    const { data: HealthTip } = await axios.get(
+      `https://dapi.kakao.com/v2/search/blog?query=http://blog.daum.net/nhicblog`,
+      {
+        headers: {
+          Authorization: `KakaoAK ${KAKAO_KEY}`,
+        },
+      },
+    );
+    return HealthTip.documents;
+  };
+ 
   getDust = async (lat, long) => {
     const { data: TM } = await axios.get(
       `https://dapi.kakao.com/v2/local/geo/transcoord.json?x=${long}&y=${lat}&input_coord=WGS84&output_coord=TM`,
@@ -163,7 +214,7 @@ export default class HomeContainer extends React.Component {
         Hours,
       )}&nx=${x}&ny=${y}&_type=json&ServiceKey=${DATA_KEY}&numOfRows=10`,
     );
-    // console.log(BaseDate);
+    console.log(BaseDate);
     console.log(Weather);
     return Weather.response.body.items;
   };
@@ -174,12 +225,20 @@ export default class HomeContainer extends React.Component {
     } = await axios.get(
       `https://newsapi.org/v2/top-headlines?country=kr&category=health&apiKey=${GOOGLE_KEY}`,
     );
-    console.log(news);
     return news;
   };
+  
 
   render() {
-    const { weatherLoaded, Weather, Dust, CurrentPosition, News,Hospitals,Pharmacys } = this.state;
+    const {
+      weatherLoaded,
+      Weather,
+      Dust,
+      CurrentPosition,
+      News,
+      FoodTip,
+      HealthTip,
+    } = this.state;
     return weatherLoaded ? (
       <HomePresenter
         CurrentPosition={CurrentPosition}
@@ -187,8 +246,8 @@ export default class HomeContainer extends React.Component {
         Weather={Weather}
         refresh={this.refresh}
         News={News}
-        Hospitals={Hospitals}
-        Pharmacys={Pharmacys}
+        HealthTip={HealthTip}
+        FoodTip={FoodTip}
       />
     ) : (
       <Loader />
