@@ -1,75 +1,29 @@
 import mongoose from "mongoose";
 
 const PharmacySchema = new mongoose.Schema({
-    dutyAddr : {
-            _text : String
-    },
-    dutyInf : {
-            _text : String
-    },
-    dutyMapimg : {
-            _text : String
-    },
-    dutyName : {
-            _text : String
-    },
-    dutyTel1: {
-            _text : String
-    },
-    dutyTime1c: {
-            _text : String
-    },
-    dutyTime1s : {
-            _text : String
-    },
-    dutyTime2c: {
-            _text : String
-    },
-    dutyTime2s : {
-            _text : String
-    },
-    dutyTime3c: {
-            _text : String
-    },
-    dutyTime3s : {
-            _text : String
-    },
-    dutyTime4c: {
-            _text : String
-    },
-    dutyTime4s : {
-            _text : String
-    },
-    dutyTime5c: {
-            _text : String
-    },
-    dutyTime5s : {
-            _text : String
-    },
-    dutyTime6c: {
-            _text : String
-    },
-    dutyTime6s : {
-            _text : String
-    },
-    hpid: {
-            _text : String
-    },
-    postCdn1: {
-            _text : String
-    },
-    postCdn2: {
-            _text : String
-    },
-    rnum: {
-            _text : String
-    },
-    wgs84Lat: {
-            _text : String
-    },
-    wgs84Lon: {
-            _text : String
-    }
+    dutyAddr : String,
+    dutyInf : String,
+    dutyMapimg : String,
+    dutyName : String,
+    dutyTel1: String,
+    dutyTime1c: String,
+    dutyTime1s : String,
+    dutyTime2c: String,
+    dutyTime2s : String,
+    dutyTime3c: String,
+    dutyTime3s : String,
+    dutyTime4c: String,
+    dutyTime4s : String,
+    dutyTime5c: String,
+    dutyTime5s : String,
+    dutyTime6c: String,
+    dutyTime6s : String,
+    hpid: String,
+    postCdn1: String,
+    postCdn2: String,
+    rnum: String,
+    wgs84Lat: String,
+    wgs84Lon: String
 },{strict: false });
 
 const model = mongoose.model("pharmacys",PharmacySchema);

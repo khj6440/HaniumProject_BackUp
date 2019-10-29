@@ -4,7 +4,9 @@ const mongoose = require('mongoose');
 
 mongoose.connect("mongodb://localhost:27017/sick",{
 	useNewUrlParser: true,
-	useFindAndModify: false
+	useFindAndModify: false,
+	useCreateIndex: true,
+	useUnifiedTopology: true
 	}
 );
 
@@ -14,7 +16,6 @@ const handleError = (error) => console.log("Error on DB");
 	db.once("open",handleOpen);
 	db.on("error",handleError);
 
-/*
 //몽고db모듈 사용
 var MongoClient = require('mongodb').MongoClient;
 
@@ -35,4 +36,4 @@ var connectDB = function() {
 }
 module.exports.database = database;
 module.exports.connectDB = connectDB;
-*/
+
