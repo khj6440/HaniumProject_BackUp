@@ -1,0 +1,67 @@
+<DOCTYPE html>
+<html>
+	<head>
+		<title>VanillaJavaScript</title>
+		<meta charset="utf-8" />
+		<link rel="stylesheet" href="css/style.css" />
+		<script src = "https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<link rel = "stylesheet"
+			 href = "http://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+	</head>
+	<body>
+		<div class="main_body">
+			<div class="js-clock">
+				<h1 class = clock-h1>00:00</h1>
+				<script src="./js/clock.js"></script>
+			</div>
+			<div class= "middle">
+			<div class="js-weather">
+				<div class = "div-region">
+					<h2 id="region">  </h2>
+				</div>
+				<div class = "div-temperature">
+					<h2 id="temperature-celcius"></h2>
+				</div>
+				<div class = "div-humidity">
+					<h2 id='humidity'></h2>
+				</div>
+				<div class="dust">
+					<h2 id='sdust'> 미세먼지 : 10 </h2>
+				</div>
+				<div class="udust">
+					<h2 id='sdust'> 초미세먼지 : 20 </h2>
+				</div>
+				<script src = "./js/weather.js"></script>
+				<script src = "./js/weatherMQTT.js"></script>
+			</div>
+			<div class="js-mqtt">
+				<div class="mqtt-height">
+					<h2>Height      : 000</h2>
+				</div>
+				<div class="mqtt-weight">
+					<h2>Weight      : 000</h2>
+				</div>
+				<div class="mqtt-HeartRate">
+					<h2>HeartRate   : 000</h2>
+				</div>
+				<div class="mqtt-Temperature">
+					<h2>Temperature : 000</h2>
+				</div>
+				<script src="./js/bundlemqtt.js"></script>
+			</div>
+			</div>
+			<div class = "js-bottom">
+				<div class="js-chat">
+					<div class = "user">
+						<i></i><span></span>
+					</div>
+					<div class = "bot">
+						<i></i><span></span>
+					</div>
+				<script src="./js/bundlemqtt.js"></script>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+

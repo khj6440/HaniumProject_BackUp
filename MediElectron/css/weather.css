@@ -1,0 +1,31 @@
+.js-weather {
+	margin-left: 100px;
+	margin-right: 500px;
+	float: left;
+	width: 30%;
+	height : 400px;
+    color:white;
+}
+
+.div-region {
+    font : 20px;
+}
+.div-temperature{
+
+}
+.div-humidity{
+}
+.dust {
+    color : white;
+    font : 20px;
+}
+
+.udust {
+    color : white;
+    font : 20px;
+}
+.middle {
+	width: 100%;
+	height: 400px;
+	display: flex;
+}
