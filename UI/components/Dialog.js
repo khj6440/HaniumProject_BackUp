@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import {
-  Text,
   TouchableOpacity,
   View,
   Image,
@@ -8,7 +7,6 @@ import {
   Platform,
 } from "react-native";
 import Dialog from "react-native-dialog";
-import AwesomeButton from "react-native-really-awesome-button";
 
 export default class DialogTester extends Component {
   constructor(props) {

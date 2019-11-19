@@ -5,6 +5,8 @@ import axios from "axios";
 import { BaseDate, Hours } from "../../constants/Time";
 import client from "../../mqtt"
 import {AsyncStorage} from "react-native";
+import {TipApi,Tip2} from "../../api"
+
 
 const KAKAO_KEY = "d8d67d3d69ab7f44bc09d1ecf85da1f8";
 const DATA_KEY =
@@ -32,15 +34,16 @@ export default class HomeContainer extends React.Component {
       FoodTip: null,
       HealthTip: null,
     };
+
   }
   onConnectionLost = responseObject => {
     if (responseObject.errorCode !== 0) {
        console.log("connection lost");
        }
   };
-  onConnect = () => {
+  onConnect = async() => {
     const { client } = this.state;
-    AsyncStorage.setItem("Connected","1");
+    await AsyncStorage.setItem("Connected","1");
     console.log("success");
   };   
   

@@ -3,7 +3,6 @@ import { Text, StyleSheet ,TouchableOpacity } from "react-native";
 import styled from "styled-components";
 import propType from "prop-types";
 import Layout from "../../constants/Layout";
-import { LinearGradient } from "expo-linear-gradient";
 import { Linking } from "expo";
 
 const Container = styled.View`
