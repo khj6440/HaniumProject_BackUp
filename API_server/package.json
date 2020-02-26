@@ -59,7 +59,7 @@
     "webpack-cli": "^3.2.3",
     "xml": "^1.0.1",
     "xml-js": "^1.6.11",
-    "yarn": "^1.16.0"
+    "yarn": "^1.22.0"
   },
   "scripts": {
     "dev:server": "nodemon --exec babel-node init.js --delay 2"
